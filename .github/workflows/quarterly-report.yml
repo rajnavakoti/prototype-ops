@@ -1,0 +1,140 @@
+name: Quarterly Report
+
+on:
+  workflow_dispatch:
+    inputs:
+      cycle:
+        description: 'Cycle identifier (e.g., Q1-2026)'
+        required: true
+        type: string
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Generate quarterly report
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CYCLE: ${{ inputs.cycle }}
+        run: |
+          REPO="${{ github.repository }}"
+
+          echo "Generating quarterly report for cycle: ${CYCLE}"
+
+          # --- Count submissions by status labels ---
+
+          TOTAL=$(gh issue list --repo "$REPO" --label "${CYCLE}" --state all --limit 500 --json number --jq 'length')
+          SUBMITTED=$(gh issue list --repo "$REPO" --label "${CYCLE},submitted" --state all --limit 500 --json number --jq 'length')
+          UNDER_REVIEW=$(gh issue list --repo "$REPO" --label "${CYCLE},under-review" --state all --limit 500 --json number --jq 'length')
+          SELECTED=$(gh issue list --repo "$REPO" --label "${CYCLE},selected" --state all --limit 500 --json number --jq 'length')
+          INVESTED=$(gh issue list --repo "$REPO" --label "${CYCLE},invested" --state all --limit 500 --json number --jq 'length')
+          GRADUATED=$(gh issue list --repo "$REPO" --label "${CYCLE},graduated" --state all --limit 500 --json number --jq 'length')
+          ITERATED=$(gh issue list --repo "$REPO" --label "${CYCLE},iterated" --state all --limit 500 --json number --jq 'length')
+          SHELVED=$(gh issue list --repo "$REPO" --label "${CYCLE},shelved" --state all --limit 500 --json number --jq 'length')
+          KILLED=$(gh issue list --repo "$REPO" --label "${CYCLE},killed" --state all --limit 500 --json number --jq 'length')
+
+          # --- Count submissions by category labels ---
+
+          CAT_AI_ML=$(gh issue list --repo "$REPO" --label "${CYCLE},ai-ml" --state all --limit 500 --json number --jq 'length')
+          CAT_AUTOMATION=$(gh issue list --repo "$REPO" --label "${CYCLE},automation" --state all --limit 500 --json number --jq 'length')
+          CAT_DATA=$(gh issue list --repo "$REPO" --label "${CYCLE},data" --state all --limit 500 --json number --jq 'length')
+          CAT_UX=$(gh issue list --repo "$REPO" --label "${CYCLE},ux" --state all --limit 500 --json number --jq 'length')
+          CAT_INFRA=$(gh issue list --repo "$REPO" --label "${CYCLE},infrastructure" --state all --limit 500 --json number --jq 'length')
+          CAT_PROCESS=$(gh issue list --repo "$REPO" --label "${CYCLE},process" --state all --limit 500 --json number --jq 'length')
+          CAT_OTHER=$(gh issue list --repo "$REPO" --label "${CYCLE},other" --state all --limit 500 --json number --jq 'length')
+
+          # --- Count priority labels ---
+
+          TOP_5=$(gh issue list --repo "$REPO" --label "${CYCLE},top-5" --state all --limit 500 --json number --jq 'length')
+          TOP_15=$(gh issue list --repo "$REPO" --label "${CYCLE},top-15" --state all --limit 500 --json number --jq 'length')
+          NOT_SELECTED=$(gh issue list --repo "$REPO" --label "${CYCLE},not-selected" --state all --limit 500 --json number --jq 'length')
+
+          # --- Calculate graduation rate ---
+
+          DECIDED=$((GRADUATED + ITERATED + SHELVED + KILLED))
+          if [ "$DECIDED" -gt 0 ]; then
+            GRAD_RATE=$(( (GRADUATED * 100) / DECIDED ))
+          else
+            GRAD_RATE="N/A"
+          fi
+
+          # --- Build the report body ---
+
+          REPORT_BODY=$(cat <<EOF
+          ## Quarterly Report: ${CYCLE}
+
+          **Generated:** $(date -u +"%Y-%m-%d %H:%M UTC")
+          **Repository:** ${REPO}
+
+          ---
+
+          ### Overview
+
+          | Metric | Count |
+          |--------|-------|
+          | **Total Submissions** | ${TOTAL} |
+          | Top 5 (Rewarded) | ${TOP_5} |
+          | Top 15 (Invested) | ${TOP_15} |
+          | Not Selected | ${NOT_SELECTED} |
+
+          ---
+
+          ### Status Distribution
+
+          | Status | Count |
+          |--------|-------|
+          | Submitted | ${SUBMITTED} |
+          | Under Review | ${UNDER_REVIEW} |
+          | Selected | ${SELECTED} |
+          | Invested | ${INVESTED} |
+          | Graduated | ${GRADUATED} |
+          | Iterated | ${ITERATED} |
+          | Shelved | ${SHELVED} |
+          | Killed | ${KILLED} |
+
+          ---
+
+          ### Category Breakdown
+
+          | Category | Count |
+          |----------|-------|
+          | AI/ML | ${CAT_AI_ML} |
+          | Automation | ${CAT_AUTOMATION} |
+          | Data | ${CAT_DATA} |
+          | UX | ${CAT_UX} |
+          | Infrastructure | ${CAT_INFRA} |
+          | Process | ${CAT_PROCESS} |
+          | Other | ${CAT_OTHER} |
+
+          ---
+
+          ### Graduation Outcomes
+
+          | Metric | Value |
+          |--------|-------|
+          | Total decisions made | ${DECIDED} |
+          | Graduated | ${GRADUATED} |
+          | Iterated (next cycle) | ${ITERATED} |
+          | Shelved | ${SHELVED} |
+          | Killed | ${KILLED} |
+          | **Graduation Rate** | **${GRAD_RATE}%** |
+
+          ---
+
+          *This report was generated automatically by the Quarterly Report workflow.*
+          *To view individual submissions, filter issues by the \`${CYCLE}\` label.*
+          EOF
+          )
+
+          # --- Create the report as a GitHub issue ---
+
+          gh issue create \
+            --repo "$REPO" \
+            --title "Quarterly Report: ${CYCLE}" \
+            --body "$REPORT_BODY" \
+            --label "quarterly-report,${CYCLE}"
+
+          echo "Quarterly report created for ${CYCLE}."

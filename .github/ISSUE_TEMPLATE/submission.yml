@@ -1,0 +1,109 @@
+name: Prototype Submission
+description: Submit a prototype for evaluation
+title: "[Submission]: "
+labels: ["submitted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Prototype Submission
+        Thank you for submitting a prototype. Fill out every section below — incomplete submissions will be sent back for revision. If you need help sharpening your proposal, reach out to the organising team for a pika/coffee chat.
+
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: Problem Statement
+      description: What real problem does this solve? Be specific — who has this problem, how often, and what happens today without your solution.
+      placeholder: "Describe the problem in 1-2 paragraphs. Focus on the pain, not the solution."
+    validations:
+      required: true
+
+  - type: textarea
+    id: dollar-value-framing
+    attributes:
+      label: Dollar Value Framing
+      description: Is this saving money, generating revenue, or reducing risk? Provide a rough estimate using concrete numbers (e.g., saving X hours/week × Y people × hourly cost = annual value).
+      placeholder: |
+        Type: [Cost Saving / Revenue Generation / Risk Reduction]
+        Estimate: $X per year
+        Calculation: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: working-prototype
+    attributes:
+      label: Working Prototype
+      description: Link to the repo or demo and describe what it does. This must be a working prototype — not a sketch, not a slide deck, not a deployed product.
+      placeholder: |
+        Repo: https://github.com/...
+        What it does: ...
+        How to run it: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: effort-so-far
+    attributes:
+      label: Effort So Far
+      description: How much time and resources have gone into building this prototype?
+      placeholder: |
+        Time spent: X hours / days
+        People involved: ...
+        Tools used: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: whats-needed-to-graduate
+    attributes:
+      label: What's Needed to Graduate
+      description: What would it take to make this production-ready? Be honest about the investment required.
+      placeholder: |
+        Team size: X engineers, Y designers, etc.
+        Time estimate: X months
+        Budget: $X (infrastructure, licenses, etc.)
+        Dependencies: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: risk-assessment
+    attributes:
+      label: Risk Assessment
+      description: What are the risks? Data sensitivity, security implications, integration complexity, regulatory concerns.
+      placeholder: |
+        Data sensitivity: [Low / Medium / High] — explain
+        Security implications: ...
+        Integration complexity: ...
+        Other risks: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: demo
+    attributes:
+      label: Demo
+      description: Link to a video walkthrough, screenshots, or live demo. Reviewers need to see it working.
+      placeholder: |
+        Video: https://...
+        Screenshots: (attach below or link)
+        Live demo: https://...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Select the category that best fits your prototype.
+      options:
+        - AI/ML
+        - Automation
+        - Data
+        - UX
+        - Infrastructure
+        - Process
+        - Other
+    validations:
+      required: true

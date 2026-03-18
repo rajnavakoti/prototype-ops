@@ -1,0 +1,99 @@
+# Prototype-Ops Label Taxonomy
+# Sync with: https://github.com/Financial-Times/github-label-sync
+# Usage: github-label-sync --labels .github/labels.yml <owner>/<repo>
+
+# --- Status Labels ---
+
+- name: "status: submitted"
+  color: "0E8A16"
+  description: "Prototype has been submitted and is awaiting review"
+
+- name: "status: under-review"
+  color: "FBCA04"
+  description: "Prototype is being evaluated by the review panel"
+
+- name: "status: selected"
+  color: "1D76DB"
+  description: "Prototype has been selected in the quarterly evaluation"
+
+- name: "status: invested"
+  color: "5319E7"
+  description: "Prototype has been allocated dedicated time and resources"
+
+- name: "status: graduated"
+  color: "0E8A16"
+  description: "Prototype has graduated to production — funded, staffed, on the roadmap"
+
+- name: "status: iterated"
+  color: "D93F0B"
+  description: "Prototype needs refinement — queued for next cycle with feedback"
+
+- name: "status: shelved"
+  color: "BFD4F2"
+  description: "Prototype is valuable but not now — archived for future revisit"
+
+- name: "status: killed"
+  color: "B60205"
+  description: "Prototype has been closed — learnings documented, loop closed"
+
+# --- Category Labels ---
+
+- name: "category: ai-ml"
+  color: "C5DEF5"
+  description: "AI, machine learning, NLP, or computer vision prototype"
+
+- name: "category: automation"
+  color: "C5DEF5"
+  description: "Workflow automation, scripting, or process automation prototype"
+
+- name: "category: data"
+  color: "C5DEF5"
+  description: "Data pipeline, analytics, reporting, or data tooling prototype"
+
+- name: "category: ux"
+  color: "C5DEF5"
+  description: "User experience, interface design, or accessibility prototype"
+
+- name: "category: infrastructure"
+  color: "C5DEF5"
+  description: "DevOps, platform, CI/CD, or infrastructure tooling prototype"
+
+- name: "category: process"
+  color: "C5DEF5"
+  description: "Business process improvement or operational efficiency prototype"
+
+- name: "category: other"
+  color: "C5DEF5"
+  description: "Prototype that does not fit existing categories"
+
+# --- Priority Labels ---
+
+- name: "priority: top-5"
+  color: "0E8A16"
+  description: "Top 5 — rewarded with recognition and fast-tracked to graduation review"
+
+- name: "priority: top-15"
+  color: "FBCA04"
+  description: "Top 15 — invested with 2-3 months of dedicated engineering time"
+
+- name: "priority: not-selected"
+  color: "E4E669"
+  description: "Not selected this cycle — feedback provided for resubmission"
+
+# --- Cycle Labels ---
+
+- name: "cycle: Q1-2026"
+  color: "D4C5F9"
+  description: "Submitted or evaluated in Q1 2026 cycle"
+
+- name: "cycle: Q2-2026"
+  color: "D4C5F9"
+  description: "Submitted or evaluated in Q2 2026 cycle"
+
+- name: "cycle: Q3-2026"
+  color: "D4C5F9"
+  description: "Submitted or evaluated in Q3 2026 cycle"
+
+- name: "cycle: Q4-2026"
+  color: "D4C5F9"
+  description: "Submitted or evaluated in Q4 2026 cycle"
