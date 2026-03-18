@@ -1,0 +1,87 @@
+name: Graduation Decision
+description: Record the outcome for an evaluated prototype
+title: "[Graduation]: "
+labels: ["graduation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Graduation Decision
+        Record the final outcome for a prototype that has been through the evaluation process. Every prototype gets one of four outcomes — no zombie prototypes.
+
+  - type: input
+    id: submission-reference
+    attributes:
+      label: Submission Reference
+      description: The issue number of the original prototype submission.
+      placeholder: "#123"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      description: The decision for this prototype.
+      options:
+        - "Graduate — Fund it, staff it, integrate into product roadmap"
+        - "Iterate — Good idea, needs refinement, queue for next cycle"
+        - "Shelve — Valuable but not now, archive and revisit later"
+        - "Kill — Learned enough, thank the team, close the loop"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reasoning
+    attributes:
+      label: Reasoning
+      description: Why this decision? Reference evaluation scores, panel discussion, strategic factors.
+      placeholder: "Explain the rationale behind this decision..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: next-steps
+    attributes:
+      label: Next Steps
+      description: Concrete actions that follow from this decision. What happens now?
+      placeholder: |
+        - [ ] Action item 1
+        - [ ] Action item 2
+        - [ ] Action item 3
+    validations:
+      required: true
+
+  - type: textarea
+    id: team-assignment
+    attributes:
+      label: Team Assignment
+      description: Required if outcome is Graduate or Iterate. Who is responsible for taking this forward?
+      placeholder: |
+        Lead: @username
+        Engineers: @username, @username
+        Sponsor: @username
+    validations:
+      required: false
+
+  - type: input
+    id: timeline
+    attributes:
+      label: Timeline
+      description: Expected timeline for the next steps.
+      placeholder: "e.g., 3 months, End of Q2 2026"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: cycle
+    attributes:
+      label: Cycle
+      description: Which evaluation cycle does this decision belong to?
+      options:
+        - Q1-2026
+        - Q2-2026
+        - Q3-2026
+        - Q4-2026
+    validations:
+      required: true

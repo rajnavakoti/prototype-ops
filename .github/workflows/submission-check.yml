@@ -1,0 +1,192 @@
+name: Submission Validation
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+
+jobs:
+  validate-submission:
+    if: contains(github.event.issue.labels.*.name, 'submitted')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Validate submission fields
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const body = context.payload.issue.body || '';
+            const title = context.payload.issue.title || '';
+            const issueNumber = context.payload.issue.number;
+
+            // Define required fields and the patterns that indicate they are still placeholder/empty
+            const requiredFields = [
+              {
+                name: 'Problem Statement',
+                heading: /##\s*Problem\s*Statement/i,
+                placeholders: [
+                  /\[Describe the problem/i,
+                  /^\s*$/
+                ]
+              },
+              {
+                name: 'Dollar Value Framing',
+                heading: /##\s*Dollar\s*Value\s*(Framing)?/i,
+                placeholders: [
+                  /\[e\.g\.,/i,
+                  /\[Cost saving \| Revenue/i
+                ]
+              },
+              {
+                name: 'Working Prototype',
+                heading: /##\s*Working\s*Prototype/i,
+                placeholders: [
+                  /\[URL to prototype/i,
+                  /\[Link\]/i
+                ]
+              },
+              {
+                name: 'Effort So Far',
+                heading: /##\s*Effort\s*So\s*Far/i,
+                placeholders: [
+                  /\[e\.g\.,\s*"~20 hours/i,
+                  /\[e\.g\.,\s*"Just me"/i
+                ]
+              },
+              {
+                name: "What's Needed to Graduate",
+                heading: /##\s*What.*Needed\s*to\s*Graduate/i,
+                placeholders: [
+                  /\[e\.g\.,\s*"2 engineers/i,
+                  /\[e\.g\.,\s*"3 months/i
+                ]
+              },
+              {
+                name: 'Risk Assessment',
+                heading: /##\s*Risk\s*Assessment/i,
+                placeholders: [
+                  /\[What data does this touch/i,
+                  /\[Does this call external/i
+                ]
+              },
+              {
+                name: 'Demo',
+                heading: /##\s*Demo/i,
+                placeholders: [
+                  /\[Link to a 2-5 minute/i,
+                  /\[Embed or link/i,
+                  /\[URL if available\]/i
+                ]
+              }
+            ];
+
+            const missingFields = [];
+
+            for (const field of requiredFields) {
+              const headingMatch = body.match(field.heading);
+
+              if (!headingMatch) {
+                // Section heading is completely missing
+                missingFields.push(field.name);
+                continue;
+              }
+
+              // Extract content between this heading and the next heading (or end of body)
+              const headingIndex = headingMatch.index;
+              const afterHeading = body.slice(headingIndex);
+              const nextHeadingMatch = afterHeading.slice(3).match(/\n##\s/);
+              const sectionContent = nextHeadingMatch
+                ? afterHeading.slice(0, nextHeadingMatch.index + 3)
+                : afterHeading;
+
+              // Remove the heading line itself, HTML comments, and horizontal rules
+              const content = sectionContent
+                .replace(/##.*\n/, '')
+                .replace(/<!--[\s\S]*?-->/g, '')
+                .replace(/---/g, '')
+                .trim();
+
+              // Check if section is empty
+              if (content.length === 0) {
+                missingFields.push(field.name);
+                continue;
+              }
+
+              // Check if section still contains only placeholder text
+              const isPlaceholder = field.placeholders.some(p => p.test(content));
+              if (isPlaceholder) {
+                missingFields.push(field.name);
+              }
+            }
+
+            if (missingFields.length > 0) {
+              const fieldList = missingFields.map(f => `- **${f}**`).join('\n');
+
+              const comment = [
+                '## Submission Validation Failed',
+                '',
+                'The following required fields are missing or still contain placeholder text:',
+                '',
+                fieldList,
+                '',
+                'Please update your submission to fill in these sections with real content.',
+                'Refer to `templates/submission-template.md` for guidance on what each section expects.',
+                '',
+                '---',
+                '*This check runs automatically on issues with the `submitted` label.*'
+              ].join('\n');
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: comment
+              });
+
+              // Add needs-revision label
+              try {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber,
+                  labels: ['needs-revision']
+                });
+              } catch (e) {
+                core.warning(`Could not add needs-revision label: ${e.message}`);
+              }
+
+              core.setFailed(`Submission is missing ${missingFields.length} required field(s).`);
+            } else {
+              // Submission is valid — post confirmation comment
+              const successComment = [
+                '## Submission Validated',
+                '',
+                'All required fields are present. This submission is ready for review.',
+                '',
+                '---',
+                '*This check runs automatically on issues with the `submitted` label.*'
+              ].join('\n');
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: successComment
+              });
+
+              // Remove needs-revision label if present
+              try {
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber,
+                  name: 'needs-revision'
+                });
+              } catch (e) {
+                // Label might not exist, that is fine
+              }
+
+              core.info('Submission validation passed.');
+            }

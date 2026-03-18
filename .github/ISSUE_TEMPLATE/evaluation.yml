@@ -1,0 +1,185 @@
+name: Prototype Evaluation
+description: Score a submission against the evaluation rubric
+title: "[Evaluation]: "
+labels: ["under-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Prototype Evaluation
+        Score the submission against each rubric criterion (0-5). Provide comments to justify your scores. Be specific — the submitter deserves honest, actionable feedback.
+
+  - type: input
+    id: submission-reference
+    attributes:
+      label: Submission Reference
+      description: The issue number of the prototype submission being evaluated.
+      placeholder: "#123"
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Business Value
+        Does this solve a real problem with measurable impact? Is the dollar value framing credible?
+
+  - type: dropdown
+    id: business-value-score
+    attributes:
+      label: Business Value Score
+      options:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+    validations:
+      required: true
+
+  - type: textarea
+    id: business-value-comments
+    attributes:
+      label: Business Value Comments
+      description: Justify your score. What's strong? What's missing?
+      placeholder: "Explain your reasoning..."
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Technical Feasibility
+        Can this actually be built to production quality? Are the technical choices sound?
+
+  - type: dropdown
+    id: technical-feasibility-score
+    attributes:
+      label: Technical Feasibility Score
+      options:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical-feasibility-comments
+    attributes:
+      label: Technical Feasibility Comments
+      description: Justify your score. What's strong? What's missing?
+      placeholder: "Explain your reasoning..."
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Resource Efficiency
+        Is the ask reasonable relative to the value? Can this be done with minimal investment?
+
+  - type: dropdown
+    id: resource-efficiency-score
+    attributes:
+      label: Resource Efficiency Score
+      options:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+    validations:
+      required: true
+
+  - type: textarea
+    id: resource-efficiency-comments
+    attributes:
+      label: Resource Efficiency Comments
+      description: Justify your score. What's strong? What's missing?
+      placeholder: "Explain your reasoning..."
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Strategic Alignment
+        Does this align with where the organization is heading? Does it support stated priorities?
+
+  - type: dropdown
+    id: strategic-alignment-score
+    attributes:
+      label: Strategic Alignment Score
+      options:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+    validations:
+      required: true
+
+  - type: textarea
+    id: strategic-alignment-comments
+    attributes:
+      label: Strategic Alignment Comments
+      description: Justify your score. What's strong? What's missing?
+      placeholder: "Explain your reasoning..."
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Innovation Factor
+        Is this genuinely novel? Does it challenge assumptions or introduce a new approach?
+
+  - type: dropdown
+    id: innovation-factor-score
+    attributes:
+      label: Innovation Factor Score
+      options:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+    validations:
+      required: true
+
+  - type: textarea
+    id: innovation-factor-comments
+    attributes:
+      label: Innovation Factor Comments
+      description: Justify your score. What's strong? What's missing?
+      placeholder: "Explain your reasoning..."
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Overall Recommendation
+
+  - type: dropdown
+    id: overall-recommendation
+    attributes:
+      label: Overall Recommendation
+      description: Based on your scores, what should happen with this prototype?
+      options:
+        - Graduate
+        - Iterate
+        - Shelve
+        - Kill
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-comments
+    attributes:
+      label: Additional Comments
+      description: Any other feedback, concerns, or suggestions for the submitter.
+      placeholder: "Anything else the submitter or review panel should know..."
