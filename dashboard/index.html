@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,60 +13,95 @@
 
   <!-- Header -->
   <header class="site-header" role="banner">
-    <h1>Prototype-Ops Dashboard</h1>
+    <h1>PROTOTYPE-OPS</h1>
     <div class="header-meta">
       <span class="cycle-badge" id="cycle-indicator" aria-label="Current evaluation cycle">Q1-2026</span>
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark and light mode" type="button">DARK</button>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark and light mode" type="button">LIGHT</button>
     </div>
   </header>
 
   <!-- Main Content -->
   <main class="main-container" role="main">
 
-    <!-- Stats Bar -->
-    <section class="stats-bar" aria-label="Submission statistics">
-      <div class="stat-card">
-        <span class="stat-value mono" id="stat-total">--</span>
-        <span class="stat-label">Total Submissions</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-value mono" id="stat-review">--</span>
-        <span class="stat-label">Under Review</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-value mono" id="stat-invested">--</span>
-        <span class="stat-label">Invested</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-value mono" id="stat-graduated">--</span>
-        <span class="stat-label">Graduated</span>
+    <!-- Hero Section -->
+    <section class="hero" aria-label="Dashboard overview">
+      <div class="hero-tagline">Prototyping Operating Model</div>
+      <h2 class="hero-title">Channel the energy.<br>Don't fight it.</h2>
+      <p class="hero-subtitle">Real prototypes. Real evaluation. Real outcomes. Track your organization's innovation pipeline from submission to graduation.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-value mono" id="hero-total">--</span>
+          <span class="hero-stat-label">Submissions</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value mono" id="hero-active">--</span>
+          <span class="hero-stat-label">In Pipeline</span>
+        </div>
+        <div class="hero-stat hero-stat--highlight">
+          <span class="hero-stat-value mono" id="hero-graduated">--</span>
+          <span class="hero-stat-label">Graduated</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value mono" id="hero-value">--</span>
+          <span class="hero-stat-label">Est. Value</span>
+        </div>
       </div>
     </section>
 
     <!-- Pipeline Visualization -->
     <section class="section" aria-label="Submission pipeline">
-      <h2 class="section-title">Pipeline</h2>
+      <div class="section-header">
+        <h2 class="section-title">Pipeline</h2>
+        <span class="section-subtitle">Prototype lifecycle stages</span>
+      </div>
       <div class="pipeline" id="pipeline" role="list" aria-label="Pipeline stages"></div>
     </section>
 
-    <!-- Category Breakdown -->
-    <section class="section" aria-label="Category breakdown">
-      <h2 class="section-title">Categories</h2>
-      <table class="category-table" id="category-table" aria-label="Submissions by category">
-        <thead>
-          <tr>
-            <th scope="col">Category</th>
-            <th scope="col">Count</th>
-            <th scope="col">Distribution</th>
-          </tr>
-        </thead>
-        <tbody id="category-body"></tbody>
-      </table>
+    <!-- Gauges Row -->
+    <section class="section" aria-label="Key metrics">
+      <div class="section-header">
+        <h2 class="section-title">Metrics</h2>
+        <span class="section-subtitle">Cycle performance</span>
+      </div>
+      <div class="gauge-row" id="gauge-row"></div>
     </section>
 
-    <!-- Filters -->
+    <!-- Category Breakdown: Pie + Table -->
+    <section class="section" aria-label="Category breakdown">
+      <div class="section-header">
+        <h2 class="section-title">Categories</h2>
+        <span class="section-subtitle">Submission distribution</span>
+      </div>
+      <div class="categories-row">
+        <div class="pie-chart-container" id="pie-container">
+          <div class="pie-chart-wrapper">
+            <div class="pie-chart" id="pie-chart"></div>
+            <div class="pie-chart-center">
+              <span class="pie-chart-center-value" id="pie-total">--</span>
+              <span class="pie-chart-center-label">Total</span>
+            </div>
+          </div>
+          <div class="pie-legend" id="pie-legend"></div>
+        </div>
+        <table class="category-table" id="category-table" aria-label="Submissions by category">
+          <thead>
+            <tr>
+              <th scope="col">Category</th>
+              <th scope="col">Count</th>
+              <th scope="col">Distribution</th>
+            </tr>
+          </thead>
+          <tbody id="category-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Filters + Submissions -->
     <section class="section" aria-label="Submission filters">
-      <h2 class="section-title">Submissions</h2>
+      <div class="section-header">
+        <h2 class="section-title">Submissions</h2>
+        <span class="section-subtitle">Click a card to expand details</span>
+      </div>
       <div class="filters">
         <div class="filter-group">
           <label for="filter-status">Status</label>
@@ -121,6 +156,27 @@
         'killed'
       ];
 
+      var CATEGORY_COLORS = {
+        'ai-ml': 'var(--color-cat-ai-ml)',
+        'automation': 'var(--color-cat-automation)',
+        'data': 'var(--color-cat-data)',
+        'ux': 'var(--color-cat-ux)',
+        'infrastructure': 'var(--color-cat-infrastructure)',
+        'process': 'var(--color-cat-process)',
+        'other': 'var(--color-cat-other)'
+      };
+
+      var STATUS_COLORS = {
+        'submitted': 'var(--color-status-submitted)',
+        'under-review': 'var(--color-status-review)',
+        'selected': 'var(--color-status-selected)',
+        'invested': 'var(--color-status-invested)',
+        'graduated': 'var(--color-status-graduated)',
+        'iterated': 'var(--color-status-iterated)',
+        'shelved': 'var(--color-status-shelved)',
+        'killed': 'var(--color-status-killed)'
+      };
+
       /* ---- Theme Toggle ---- */
       var themeToggle = document.getElementById('theme-toggle');
       var root = document.documentElement;
@@ -137,7 +193,6 @@
         applyTheme(current === 'dark' ? 'light' : 'dark');
       });
 
-      /* Restore saved theme */
       try {
         var saved = localStorage.getItem('proto-ops-theme');
         if (saved) { applyTheme(saved); }
@@ -202,32 +257,163 @@
 
       /* ---- Render Functions ---- */
       function renderAll() {
-        renderStats();
+        renderHero();
         renderPipeline();
+        renderGauges();
+        renderPieChart();
         renderCategoryTable();
         renderCards();
       }
 
-      function renderStats() {
-        document.getElementById('stat-total').textContent = submissions.length;
-        document.getElementById('stat-review').textContent = countByStatus('under-review');
-        document.getElementById('stat-invested').textContent = countByStatus('invested');
-        document.getElementById('stat-graduated').textContent = countByStatus('graduated');
+      function renderHero() {
+        var total = submissions.length;
+        var active = submissions.filter(function (s) {
+          return ['submitted', 'under-review', 'selected', 'invested'].indexOf(s.status) !== -1;
+        }).length;
+        var graduated = countByStatus('graduated');
+
+        animateCounter('hero-total', total);
+        animateCounter('hero-active', active);
+        animateCounter('hero-graduated', graduated);
+
+        /* Estimated total value from submission descriptions */
+        var totalValueK = 0;
+        submissions.forEach(function (s) {
+          if (s.value) {
+            var match = s.value.match(/\$[\d,.]+[KkMm]?/);
+            if (match) {
+              var num = parseFloat(match[0].replace(/[$,K]/g, ''));
+              if (match[0].toLowerCase().indexOf('m') !== -1) num = num * 1000;
+              totalValueK += num;
+            }
+          }
+        });
+        var valueDisplay = totalValueK >= 1000 ? '$' + (totalValueK / 1000).toFixed(1) + 'M' : '$' + Math.round(totalValueK) + 'K';
+        document.getElementById('hero-value').textContent = valueDisplay;
+      }
+
+      function animateCounter(id, target) {
+        var el = document.getElementById(id);
+        var current = 0;
+        var step = Math.max(1, Math.floor(target / 20));
+        var interval = setInterval(function () {
+          current += step;
+          if (current >= target) {
+            current = target;
+            clearInterval(interval);
+          }
+          el.textContent = current;
+        }, 40);
       }
 
       function renderPipeline() {
         var container = document.getElementById('pipeline');
         container.innerHTML = '';
 
-        PIPELINE_ORDER.forEach(function (stage, i) {
+        PIPELINE_ORDER.forEach(function (stage) {
           var count = countByStatus(stage);
           var div = document.createElement('div');
           div.className = 'pipeline-stage' + (count > 0 ? ' active' : '');
           div.setAttribute('role', 'listitem');
+          div.setAttribute('data-stage', stage);
           div.innerHTML =
             '<span class="stage-count">' + count + '</span>' +
             '<span class="stage-label">' + formatLabel(stage) + '</span>';
           container.appendChild(div);
+        });
+      }
+
+      function renderGauges() {
+        var container = document.getElementById('gauge-row');
+        container.innerHTML = '';
+
+        var total = submissions.length;
+        var graduated = countByStatus('graduated');
+        var decided = ['graduated', 'iterated', 'shelved', 'killed'].reduce(function (sum, s) {
+          return sum + countByStatus(s);
+        }, 0);
+
+        var gradRate = decided > 0 ? Math.round((graduated / decided) * 100) : 0;
+        var selectionRate = total > 0 ? Math.round((countByStatus('selected') + countByStatus('invested') + graduated) / total * 100) : 0;
+        var avgScore = 0;
+        var scored = submissions.filter(function (s) { return s.score > 0; });
+        if (scored.length > 0) {
+          avgScore = Math.round(scored.reduce(function (sum, s) { return sum + s.score; }, 0) / scored.length);
+        }
+
+        var gauges = [
+          { label: 'Graduation Rate', value: gradRate, max: 100, suffix: '%', color: 'var(--color-accent-green)' },
+          { label: 'Selection Rate', value: selectionRate, max: 100, suffix: '%', color: 'var(--color-accent-blue)' },
+          { label: 'Avg Score', value: avgScore, max: 25, suffix: '/25', color: 'var(--color-accent-purple)' },
+          { label: 'Decided', value: decided, max: total || 1, suffix: '/' + total, color: 'var(--color-accent-amber)' }
+        ];
+
+        gauges.forEach(function (g) {
+          var pct = Math.round((g.value / g.max) * 100);
+          var circumference = 2 * Math.PI * 50;
+          var offset = circumference - (pct / 100) * circumference;
+
+          var card = document.createElement('div');
+          card.className = 'gauge-card';
+          card.innerHTML =
+            '<div class="gauge-ring">' +
+              '<svg viewBox="0 0 120 120">' +
+                '<circle class="gauge-ring-track" cx="60" cy="60" r="50"></circle>' +
+                '<circle class="gauge-ring-fill" cx="60" cy="60" r="50" ' +
+                  'stroke="' + g.color + '" ' +
+                  'stroke-dasharray="' + circumference + '" ' +
+                  'stroke-dashoffset="' + circumference + '" ' +
+                  'data-target="' + offset + '"></circle>' +
+                '<circle class="gauge-ring-border" cx="60" cy="60" r="56"></circle>' +
+                '<circle class="gauge-ring-border" cx="60" cy="60" r="44"></circle>' +
+              '</svg>' +
+              '<span class="gauge-ring-label">' + g.value + g.suffix + '</span>' +
+            '</div>' +
+            '<span class="gauge-title">' + g.label + '</span>';
+          container.appendChild(card);
+        });
+
+        /* Animate gauge rings */
+        setTimeout(function () {
+          var fills = container.querySelectorAll('.gauge-ring-fill');
+          fills.forEach(function (fill) {
+            fill.style.strokeDashoffset = fill.getAttribute('data-target');
+          });
+        }, 100);
+      }
+
+      function renderPieChart() {
+        var cats = countByField('category');
+        var total = submissions.length;
+        var chart = document.getElementById('pie-chart');
+        var legend = document.getElementById('pie-legend');
+
+        document.getElementById('pie-total').textContent = total;
+
+        /* Build conic gradient */
+        var gradientParts = [];
+        var currentDeg = 0;
+        var catKeys = Object.keys(cats).sort(function (a, b) { return cats[b] - cats[a]; });
+
+        catKeys.forEach(function (cat) {
+          var pct = (cats[cat] / total) * 360;
+          var color = CATEGORY_COLORS[cat] || 'var(--color-cat-other)';
+          gradientParts.push(color + ' ' + currentDeg + 'deg ' + (currentDeg + pct) + 'deg');
+          currentDeg += pct;
+        });
+
+        chart.style.background = 'conic-gradient(' + gradientParts.join(', ') + ')';
+
+        /* Legend */
+        legend.innerHTML = '';
+        catKeys.forEach(function (cat) {
+          var color = CATEGORY_COLORS[cat] || 'var(--color-cat-other)';
+          var item = document.createElement('div');
+          item.className = 'pie-legend-item';
+          item.innerHTML =
+            '<span class="pie-legend-swatch" style="background:' + color + '"></span>' +
+            '<span>' + formatLabel(cat) + ' (' + cats[cat] + ')</span>';
+          legend.appendChild(item);
         });
       }
 
@@ -237,14 +423,15 @@
         var cats = countByField('category');
         var max = Math.max.apply(null, Object.values(cats));
 
-        Object.keys(cats).sort().forEach(function (cat) {
+        Object.keys(cats).sort(function (a, b) { return cats[b] - cats[a]; }).forEach(function (cat) {
           var count = cats[cat];
           var pct = max > 0 ? Math.round((count / max) * 100) : 0;
+          var color = CATEGORY_COLORS[cat] || 'var(--color-cat-other)';
           var tr = document.createElement('tr');
           tr.innerHTML =
-            '<td>' + formatLabel(cat) + '</td>' +
+            '<td><span class="cat-color-dot" style="background:' + color + '"></span>' + formatLabel(cat) + '</td>' +
             '<td>' + count + '</td>' +
-            '<td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div></td>';
+            '<td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div></td>';
           body.appendChild(tr);
         });
       }
@@ -264,21 +451,59 @@
         filtered.forEach(function (s) {
           var card = document.createElement('article');
           card.className = 'submission-card';
-          card.innerHTML =
-            '<div class="card-header">' +
-              '<h3 class="card-title"><a href="' + escapeHtml(s.url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(s.title) + '</a></h3>' +
-              '<span class="status-badge" data-status="' + escapeHtml(s.status) + '">' + formatLabel(s.status) + '</span>' +
-            '</div>' +
-            '<div class="card-meta">' +
-              '<span>' + escapeHtml(s.submitter) + '</span>' +
-              '<span class="category-tag">' + formatLabel(s.category) + '</span>' +
-              '<span>' + escapeHtml(s.cycle) + '</span>' +
-            '</div>' +
-            '<p class="card-summary">' + escapeHtml(s.summary) + '</p>' +
-            '<div class="card-footer">' +
-              '<span class="card-score" aria-label="Score: ' + s.score + ' out of 25">' + (s.score > 0 ? s.score + '/25' : '--') + '</span>' +
-              '<span class="category-tag">#' + escapeHtml(s.id.toString()) + '</span>' +
+          card.setAttribute('data-status', s.status);
+          card.setAttribute('tabindex', '0');
+          card.setAttribute('role', 'button');
+          card.setAttribute('aria-expanded', 'false');
+          card.setAttribute('aria-label', 'Expand details for ' + s.title);
+
+          var detailHtml =
+            '<div class="card-detail">' +
+              '<div class="card-detail-grid">' +
+                (s.problem ? '<div class="card-detail-item card-detail-full"><span class="card-detail-label">Problem</span><span class="card-detail-value">' + escapeHtml(s.problem) + '</span></div>' : '') +
+                (s.value ? '<div class="card-detail-item"><span class="card-detail-label">Estimated Value</span><span class="card-detail-value">' + escapeHtml(s.value) + '</span></div>' : '') +
+                (s.effort ? '<div class="card-detail-item"><span class="card-detail-label">Effort So Far</span><span class="card-detail-value">' + escapeHtml(s.effort) + '</span></div>' : '') +
+                (s.techStack ? '<div class="card-detail-item"><span class="card-detail-label">Tech Stack</span><span class="card-detail-value">' + escapeHtml(s.techStack) + '</span></div>' : '') +
+                (s.cycle ? '<div class="card-detail-item"><span class="card-detail-label">Cycle</span><span class="card-detail-value">' + escapeHtml(s.cycle) + '</span></div>' : '') +
+              '</div>' +
+              '<div class="card-detail-actions">' +
+                (s.url ? '<a class="card-detail-link" href="' + escapeHtml(s.url) + '" target="_blank" rel="noopener noreferrer">View Issue</a>' : '') +
+                (s.demoUrl ? '<a class="card-detail-link" href="' + escapeHtml(s.demoUrl) + '" target="_blank" rel="noopener noreferrer">View Demo</a>' : '') +
+              '</div>' +
             '</div>';
+
+          card.innerHTML =
+            '<div class="card-body">' +
+              '<div class="card-header">' +
+                '<h3 class="card-title"><a href="' + escapeHtml(s.url) + '" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">' + escapeHtml(s.title) + '</a></h3>' +
+                '<span class="status-badge" data-status="' + escapeHtml(s.status) + '">' + formatLabel(s.status) + '</span>' +
+              '</div>' +
+              '<div class="card-meta">' +
+                '<span>' + escapeHtml(s.submitter) + '</span>' +
+                '<span class="category-tag">' + formatLabel(s.category) + '</span>' +
+              '</div>' +
+              '<p class="card-summary">' + escapeHtml(s.summary) + '</p>' +
+              '<div class="card-footer">' +
+                '<span class="card-score" aria-label="Score: ' + s.score + ' out of 25">' + (s.score > 0 ? s.score + '/25' : '--') + '</span>' +
+                '<span class="card-expand-hint">DETAILS</span>' +
+              '</div>' +
+            '</div>' +
+            detailHtml;
+
+          card.addEventListener('click', function (e) {
+            if (e.target.tagName === 'A') return;
+            card.classList.toggle('expanded');
+            card.setAttribute('aria-expanded', card.classList.contains('expanded'));
+          });
+
+          card.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              card.classList.toggle('expanded');
+              card.setAttribute('aria-expanded', card.classList.contains('expanded'));
+            }
+          });
+
           grid.appendChild(card);
         });
       }

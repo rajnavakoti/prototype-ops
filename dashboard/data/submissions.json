@@ -8,18 +8,28 @@
     "score": 21,
     "cycle": "Q1-2026",
     "summary": "Predicts stock shortages using historical data and sends Slack alerts before stockouts occur.",
-    "url": "https://github.com/rajnavakoti/prototype-ops/issues/1"
+    "problem": "Warehouse managers manually check stock levels daily across 12 warehouses and 8,400 SKUs. Stockouts cost an estimated $2.3M annually in lost sales and emergency reordering.",
+    "value": "$680K/year in reduced stockouts, carrying cost savings, and labor reduction.",
+    "effort": "~60 hours over 6 weeks by 1 engineer",
+    "techStack": "Python, scikit-learn, PostgreSQL, Slack API",
+    "demoUrl": "https://github.com/achen/inventory-alert",
+    "url": "https://github.com/ea-toolkit/prototype-ops/issues/1"
   },
   {
     "id": 2,
     "title": "Meeting Decision Recorder",
     "submitter": "Priya Sharma",
     "status": "selected",
-    "category": "ai-ml",
+    "category": "automation",
     "score": 19,
     "cycle": "Q1-2026",
     "summary": "Extracts action items and decisions from meeting transcripts using LLM summarization.",
-    "url": "https://github.com/rajnavakoti/prototype-ops/issues/2"
+    "problem": "In a 500-person org running 180 meetings/day, decisions and action items are lost in notes or forgotten entirely, leading to repeated discussions and missed deadlines.",
+    "value": "$412K/year from eliminated re-discussions and reduced follow-up overhead.",
+    "effort": "~80 hours over 4 weeks by 1 engineer",
+    "techStack": "Python, Whisper API, Claude API, Notion API",
+    "demoUrl": "https://github.com/psharma/meeting-recorder",
+    "url": "https://github.com/ea-toolkit/prototype-ops/issues/2"
   },
   {
     "id": 3,
@@ -30,7 +40,12 @@
     "score": 23,
     "cycle": "Q4-2025",
     "summary": "Categorizes support tickets by intent and urgency, routing critical issues to senior agents.",
-    "url": "https://github.com/rajnavakoti/prototype-ops/issues/3"
+    "problem": "Support team manually triages 540+ tickets/day. Mis-routing causes 23% of urgent tickets to miss SLA targets, costing customer satisfaction and potential churn.",
+    "value": "$534K/year from triage automation, reduced mis-routing, and faster urgent response.",
+    "effort": "~70 hours over 5 weeks by 1 engineer + 1 support lead",
+    "techStack": "Python, Claude API, Zendesk API, FastAPI",
+    "demoUrl": "https://github.com/mjohnson/feedback-classifier",
+    "url": "https://github.com/ea-toolkit/prototype-ops/issues/3"
   },
   {
     "id": 4,
@@ -41,7 +56,12 @@
     "score": 0,
     "cycle": "Q1-2026",
     "summary": "Scans receipt images, extracts amounts and categories, and auto-fills expense report forms.",
-    "url": "https://github.com/rajnavakoti/prototype-ops/issues/4"
+    "problem": "Finance team spends 120 hours/month manually processing 800+ expense reports. Error rate is 8%, requiring additional review cycles.",
+    "value": "$195K/year in processing time savings and error reduction.",
+    "effort": "~30 hours over 3 weeks by 1 engineer",
+    "techStack": "Python, GPT-4 Vision, Google Sheets API",
+    "demoUrl": "",
+    "url": "https://github.com/ea-toolkit/prototype-ops/issues/4"
   },
   {
     "id": 5,
@@ -52,7 +72,12 @@
     "score": 0,
     "cycle": "Q1-2026",
     "summary": "Connects Confluence, SharePoint, and Slack data into a unified semantic search interface.",
-    "url": "https://github.com/rajnavakoti/prototype-ops/issues/5"
+    "problem": "Engineers spend an average of 45 minutes/day searching for internal documentation across 4 different platforms. Information silos cause duplicate work and inconsistent answers.",
+    "value": "$890K/year across 200 engineers saving 30 min/day.",
+    "effort": "~90 hours over 8 weeks by 1 engineer",
+    "techStack": "Python, LangChain, Pinecone, React",
+    "demoUrl": "https://github.com/dkim/knowledge-search",
+    "url": "https://github.com/ea-toolkit/prototype-ops/issues/5"
   },
   {
     "id": 6,
@@ -63,7 +88,12 @@
     "score": 14,
     "cycle": "Q4-2025",
     "summary": "Aggregates build metrics across repos and flags degrading pipelines before they break.",
-    "url": "https://github.com/rajnavakoti/prototype-ops/issues/6"
+    "problem": "Platform team manages 85 repos with CI/CD pipelines. Degradation goes unnoticed until builds fail, causing 2-4 hour developer blocks per incident.",
+    "value": "$240K/year in reduced developer downtime and faster incident response.",
+    "effort": "~50 hours over 4 weeks by 1 engineer",
+    "techStack": "Go, GitHub Actions API, Prometheus, Grafana",
+    "demoUrl": "https://github.com/sokafor/pipeline-monitor",
+    "url": "https://github.com/ea-toolkit/prototype-ops/issues/6"
   },
   {
     "id": 7,
@@ -74,7 +104,12 @@
     "score": 0,
     "cycle": "Q1-2026",
     "summary": "Generates role-specific onboarding checklists from team docs and past onboarding feedback.",
-    "url": "https://github.com/rajnavakoti/prototype-ops/issues/7"
+    "problem": "New hire onboarding takes 3-4 weeks with inconsistent quality. Managers spend 10+ hours creating custom checklists that often miss critical steps.",
+    "value": "$156K/year from faster ramp-up and reduced manager overhead across 60 hires/year.",
+    "effort": "~25 hours over 2 weeks by 1 engineer",
+    "techStack": "Python, Claude API, Confluence API, Slack Bot",
+    "demoUrl": "https://github.com/lnguyen/onboard-gen",
+    "url": "https://github.com/ea-toolkit/prototype-ops/issues/7"
   },
   {
     "id": 8,
@@ -85,7 +120,12 @@
     "score": 18,
     "cycle": "Q1-2026",
     "summary": "Crawls internal web apps and generates WCAG compliance reports with fix suggestions.",
-    "url": "https://github.com/rajnavakoti/prototype-ops/issues/8"
+    "problem": "12 internal web apps serve 3,000 employees, none fully WCAG compliant. Manual audits cost $15K each and take 2 weeks per app.",
+    "value": "$160K/year in audit cost savings plus compliance risk reduction.",
+    "effort": "~55 hours over 5 weeks by 1 engineer",
+    "techStack": "Node.js, Puppeteer, axe-core, React dashboard",
+    "demoUrl": "https://github.com/teriksson/a11y-scanner",
+    "url": "https://github.com/ea-toolkit/prototype-ops/issues/8"
   },
   {
     "id": 9,
@@ -96,7 +136,12 @@
     "score": 0,
     "cycle": "Q1-2026",
     "summary": "Monitors daily sales figures and flags statistically significant deviations in real time.",
-    "url": "https://github.com/rajnavakoti/prototype-ops/issues/9"
+    "problem": "Regional managers review sales dashboards manually each morning. Anomalies in underperforming regions are caught 3-5 days late, missing the window for corrective action.",
+    "value": "$320K/year from earlier anomaly detection and faster response to sales dips.",
+    "effort": "~40 hours over 3 weeks by 1 data scientist",
+    "techStack": "Python, Prophet, Streamlit, Slack API",
+    "demoUrl": "https://github.com/falrashid/sales-anomaly",
+    "url": "https://github.com/ea-toolkit/prototype-ops/issues/9"
   },
   {
     "id": 10,
@@ -107,6 +152,11 @@
     "score": 17,
     "cycle": "Q1-2026",
     "summary": "Parses vendor contracts for renewal dates and sends escalating reminders to procurement.",
-    "url": "https://github.com/rajnavakoti/prototype-ops/issues/10"
+    "problem": "Procurement manages 200+ vendor contracts. 15% auto-renew unintentionally due to missed deadlines, locking the company into $1.2M in unwanted renewals annually.",
+    "value": "$360K/year from prevented unwanted auto-renewals and better negotiation timing.",
+    "effort": "~35 hours over 3 weeks by 1 engineer",
+    "techStack": "Python, Claude API, Google Calendar API, Slack",
+    "demoUrl": "https://github.com/rpatel/contract-tracker",
+    "url": "https://github.com/ea-toolkit/prototype-ops/issues/10"
   }
 ]
