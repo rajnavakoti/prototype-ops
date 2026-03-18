@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "title": "AI-Powered Inventory Alert System",
+    "submitter": "Alex Chen",
+    "status": "invested",
+    "category": "ai-ml",
+    "score": 21,
+    "cycle": "Q1-2026",
+    "summary": "Predicts stock shortages using historical data and sends Slack alerts before stockouts occur.",
+    "url": "https://github.com/rajnavakoti/prototype-ops/issues/1"
+  },
+  {
+    "id": 2,
+    "title": "Meeting Decision Recorder",
+    "submitter": "Priya Sharma",
+    "status": "selected",
+    "category": "ai-ml",
+    "score": 19,
+    "cycle": "Q1-2026",
+    "summary": "Extracts action items and decisions from meeting transcripts using LLM summarization.",
+    "url": "https://github.com/rajnavakoti/prototype-ops/issues/2"
+  },
+  {
+    "id": 3,
+    "title": "Customer Feedback Classifier",
+    "submitter": "Jordan Lee",
+    "status": "graduated",
+    "category": "ai-ml",
+    "score": 23,
+    "cycle": "Q4-2025",
+    "summary": "Categorizes support tickets by intent and urgency, routing critical issues to senior agents.",
+    "url": "https://github.com/rajnavakoti/prototype-ops/issues/3"
+  },
+  {
+    "id": 4,
+    "title": "Automated Expense Report Processor",
+    "submitter": "Maria Garcia",
+    "status": "submitted",
+    "category": "automation",
+    "score": 0,
+    "cycle": "Q1-2026",
+    "summary": "Scans receipt images, extracts amounts and categories, and auto-fills expense report forms.",
+    "url": "https://github.com/rajnavakoti/prototype-ops/issues/4"
+  },
+  {
+    "id": 5,
+    "title": "Internal Knowledge Graph Search",
+    "submitter": "David Kim",
+    "status": "under-review",
+    "category": "data",
+    "score": 0,
+    "cycle": "Q1-2026",
+    "summary": "Connects Confluence, SharePoint, and Slack data into a unified semantic search interface.",
+    "url": "https://github.com/rajnavakoti/prototype-ops/issues/5"
+  },
+  {
+    "id": 6,
+    "title": "CI/CD Pipeline Health Monitor",
+    "submitter": "Sam Okafor",
+    "status": "shelved",
+    "category": "infrastructure",
+    "score": 14,
+    "cycle": "Q4-2025",
+    "summary": "Aggregates build metrics across repos and flags degrading pipelines before they break.",
+    "url": "https://github.com/rajnavakoti/prototype-ops/issues/6"
+  },
+  {
+    "id": 7,
+    "title": "Onboarding Checklist Generator",
+    "submitter": "Lisa Nguyen",
+    "status": "under-review",
+    "category": "process",
+    "score": 0,
+    "cycle": "Q1-2026",
+    "summary": "Generates role-specific onboarding checklists from team docs and past onboarding feedback.",
+    "url": "https://github.com/rajnavakoti/prototype-ops/issues/7"
+  },
+  {
+    "id": 8,
+    "title": "Accessibility Audit Scanner",
+    "submitter": "Tom Eriksson",
+    "status": "invested",
+    "category": "ux",
+    "score": 18,
+    "cycle": "Q1-2026",
+    "summary": "Crawls internal web apps and generates WCAG compliance reports with fix suggestions.",
+    "url": "https://github.com/rajnavakoti/prototype-ops/issues/8"
+  },
+  {
+    "id": 9,
+    "title": "Sales Data Anomaly Detector",
+    "submitter": "Fatima Al-Rashid",
+    "status": "submitted",
+    "category": "data",
+    "score": 0,
+    "cycle": "Q1-2026",
+    "summary": "Monitors daily sales figures and flags statistically significant deviations in real time.",
+    "url": "https://github.com/rajnavakoti/prototype-ops/issues/9"
+  },
+  {
+    "id": 10,
+    "title": "Vendor Contract Renewal Tracker",
+    "submitter": "Raj Patel",
+    "status": "selected",
+    "category": "automation",
+    "score": 17,
+    "cycle": "Q1-2026",
+    "summary": "Parses vendor contracts for renewal dates and sends escalating reminders to procurement.",
+    "url": "https://github.com/rajnavakoti/prototype-ops/issues/10"
+  }
+]
