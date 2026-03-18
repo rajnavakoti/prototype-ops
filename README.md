@@ -76,6 +76,13 @@ Update the following for your organization:
 - Apply the labels from `.github/labels.yml`
 - Create a GitHub Project board with columns: Submitted, Under Review, Selected, Invested, Graduated, Shelved, Killed
 
+### Step 3b: Preview the dashboard
+The dashboard is a static site that needs an HTTP server (it fetches JSON via `fetch()`). To preview locally:
+```bash
+npx serve dashboard/
+```
+Then open the URL shown in your terminal.
+
 ### Step 4: Announce it
 Send the repo link to your engineering org. Point them to `docs/team-manifest/submitters-guide.md` and the example submissions in `examples/`. The lower the friction, the more submissions you get.
 
@@ -116,6 +123,13 @@ Hackathons create artificial urgency and exclude people who cannot dedicate a we
 
 **Why quarterly evaluation?**
 Frequent enough to maintain momentum. Infrequent enough to accumulate a meaningful pool of submissions. Aligned with how most organizations already plan and budget.
+
+---
+
+## Notes for Maintainers
+
+- **Claude Code permissions**: `.claude/settings.json` ships with broad permissions for development convenience. Review and tighten before giving write access to contributors.
+- **Dashboard serving**: The dashboard uses `fetch()` so it needs an HTTP server. Use `npx serve dashboard/` locally.
 
 ---
 

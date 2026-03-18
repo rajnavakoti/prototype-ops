@@ -1,0 +1,9 @@
+# Internal notes — not part of the template
+RAW-THINKING.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules (if using npx serve locally)
+node_modules/
