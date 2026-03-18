@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prototype-Ops Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <h1>Prototype-Ops Dashboard</h1>
+    <div class="header-meta">
+      <span class="cycle-badge" id="cycle-indicator" aria-label="Current evaluation cycle">Q1-2026</span>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark and light mode" type="button">DARK</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-container" role="main">
+
+    <!-- Stats Bar -->
+    <section class="stats-bar" aria-label="Submission statistics">
+      <div class="stat-card">
+        <span class="stat-value mono" id="stat-total">--</span>
+        <span class="stat-label">Total Submissions</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value mono" id="stat-review">--</span>
+        <span class="stat-label">Under Review</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value mono" id="stat-invested">--</span>
+        <span class="stat-label">Invested</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value mono" id="stat-graduated">--</span>
+        <span class="stat-label">Graduated</span>
+      </div>
+    </section>
+
+    <!-- Pipeline Visualization -->
+    <section class="section" aria-label="Submission pipeline">
+      <h2 class="section-title">Pipeline</h2>
+      <div class="pipeline" id="pipeline" role="list" aria-label="Pipeline stages"></div>
+    </section>
+
+    <!-- Category Breakdown -->
+    <section class="section" aria-label="Category breakdown">
+      <h2 class="section-title">Categories</h2>
+      <table class="category-table" id="category-table" aria-label="Submissions by category">
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            <th scope="col">Count</th>
+            <th scope="col">Distribution</th>
+          </tr>
+        </thead>
+        <tbody id="category-body"></tbody>
+      </table>
+    </section>
+
+    <!-- Filters -->
+    <section class="section" aria-label="Submission filters">
+      <h2 class="section-title">Submissions</h2>
+      <div class="filters">
+        <div class="filter-group">
+          <label for="filter-status">Status</label>
+          <select id="filter-status" aria-label="Filter by status">
+            <option value="all">All Statuses</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-category">Category</label>
+          <select id="filter-category" aria-label="Filter by category">
+            <option value="all">All Categories</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-cycle">Cycle</label>
+          <select id="filter-cycle" aria-label="Filter by cycle">
+            <option value="all">All Cycles</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Submission Cards -->
+    <section class="section" aria-label="Submission cards">
+      <div class="cards-grid" id="cards-grid"></div>
+      <div class="empty-state" id="empty-state" hidden>No submissions match the selected filters.</div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    Prototype-Ops &mdash; Channel the energy, don't fight it
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ---- State ---- */
+      var submissions = [];
+      var filters = { status: 'all', category: 'all', cycle: 'all' };
+
+      var PIPELINE_ORDER = [
+        'submitted',
+        'under-review',
+        'selected',
+        'invested',
+        'graduated',
+        'shelved',
+        'killed'
+      ];
+
+      /* ---- Theme Toggle ---- */
+      var themeToggle = document.getElementById('theme-toggle');
+      var root = document.documentElement;
+
+      function applyTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        themeToggle.textContent = theme === 'dark' ? 'LIGHT' : 'DARK';
+        themeToggle.setAttribute('aria-label', 'Switch to ' + (theme === 'dark' ? 'light' : 'dark') + ' mode');
+        try { localStorage.setItem('proto-ops-theme', theme); } catch (e) { /* no-op */ }
+      }
+
+      themeToggle.addEventListener('click', function () {
+        var current = root.getAttribute('data-theme');
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      });
+
+      /* Restore saved theme */
+      try {
+        var saved = localStorage.getItem('proto-ops-theme');
+        if (saved) { applyTheme(saved); }
+      } catch (e) { /* no-op */ }
+
+      /* ---- Data Fetch ---- */
+      fetch('data/submissions.json')
+        .then(function (res) {
+          if (!res.ok) throw new Error('Failed to load submissions data');
+          return res.json();
+        })
+        .then(function (data) {
+          submissions = data;
+          populateFilters();
+          renderAll();
+        })
+        .catch(function (err) {
+          document.getElementById('empty-state').hidden = false;
+          document.getElementById('empty-state').textContent = 'Error loading data: ' + err.message;
+        });
+
+      /* ---- Filter Logic ---- */
+      function populateFilters() {
+        var statuses = unique(submissions.map(function (s) { return s.status; }));
+        var categories = unique(submissions.map(function (s) { return s.category; }));
+        var cycles = unique(submissions.map(function (s) { return s.cycle; }));
+
+        fillSelect('filter-status', statuses);
+        fillSelect('filter-category', categories);
+        fillSelect('filter-cycle', cycles);
+
+        document.getElementById('filter-status').addEventListener('change', onFilterChange);
+        document.getElementById('filter-category').addEventListener('change', onFilterChange);
+        document.getElementById('filter-cycle').addEventListener('change', onFilterChange);
+      }
+
+      function fillSelect(id, values) {
+        var select = document.getElementById(id);
+        values.forEach(function (v) {
+          var opt = document.createElement('option');
+          opt.value = v;
+          opt.textContent = formatLabel(v);
+          select.appendChild(opt);
+        });
+      }
+
+      function onFilterChange() {
+        filters.status = document.getElementById('filter-status').value;
+        filters.category = document.getElementById('filter-category').value;
+        filters.cycle = document.getElementById('filter-cycle').value;
+        renderCards();
+      }
+
+      function getFiltered() {
+        return submissions.filter(function (s) {
+          if (filters.status !== 'all' && s.status !== filters.status) return false;
+          if (filters.category !== 'all' && s.category !== filters.category) return false;
+          if (filters.cycle !== 'all' && s.cycle !== filters.cycle) return false;
+          return true;
+        });
+      }
+
+      /* ---- Render Functions ---- */
+      function renderAll() {
+        renderStats();
+        renderPipeline();
+        renderCategoryTable();
+        renderCards();
+      }
+
+      function renderStats() {
+        document.getElementById('stat-total').textContent = submissions.length;
+        document.getElementById('stat-review').textContent = countByStatus('under-review');
+        document.getElementById('stat-invested').textContent = countByStatus('invested');
+        document.getElementById('stat-graduated').textContent = countByStatus('graduated');
+      }
+
+      function renderPipeline() {
+        var container = document.getElementById('pipeline');
+        container.innerHTML = '';
+
+        PIPELINE_ORDER.forEach(function (stage, i) {
+          var count = countByStatus(stage);
+          var div = document.createElement('div');
+          div.className = 'pipeline-stage' + (count > 0 ? ' active' : '');
+          div.setAttribute('role', 'listitem');
+          div.innerHTML =
+            '<span class="stage-count">' + count + '</span>' +
+            '<span class="stage-label">' + formatLabel(stage) + '</span>';
+          container.appendChild(div);
+        });
+      }
+
+      function renderCategoryTable() {
+        var body = document.getElementById('category-body');
+        body.innerHTML = '';
+        var cats = countByField('category');
+        var max = Math.max.apply(null, Object.values(cats));
+
+        Object.keys(cats).sort().forEach(function (cat) {
+          var count = cats[cat];
+          var pct = max > 0 ? Math.round((count / max) * 100) : 0;
+          var tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td>' + formatLabel(cat) + '</td>' +
+            '<td>' + count + '</td>' +
+            '<td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div></td>';
+          body.appendChild(tr);
+        });
+      }
+
+      function renderCards() {
+        var grid = document.getElementById('cards-grid');
+        var empty = document.getElementById('empty-state');
+        var filtered = getFiltered();
+        grid.innerHTML = '';
+
+        if (filtered.length === 0) {
+          empty.hidden = false;
+          return;
+        }
+        empty.hidden = true;
+
+        filtered.forEach(function (s) {
+          var card = document.createElement('article');
+          card.className = 'submission-card';
+          card.innerHTML =
+            '<div class="card-header">' +
+              '<h3 class="card-title"><a href="' + escapeHtml(s.url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(s.title) + '</a></h3>' +
+              '<span class="status-badge" data-status="' + escapeHtml(s.status) + '">' + formatLabel(s.status) + '</span>' +
+            '</div>' +
+            '<div class="card-meta">' +
+              '<span>' + escapeHtml(s.submitter) + '</span>' +
+              '<span class="category-tag">' + formatLabel(s.category) + '</span>' +
+              '<span>' + escapeHtml(s.cycle) + '</span>' +
+            '</div>' +
+            '<p class="card-summary">' + escapeHtml(s.summary) + '</p>' +
+            '<div class="card-footer">' +
+              '<span class="card-score" aria-label="Score: ' + s.score + ' out of 25">' + (s.score > 0 ? s.score + '/25' : '--') + '</span>' +
+              '<span class="category-tag">#' + escapeHtml(s.id.toString()) + '</span>' +
+            '</div>';
+          grid.appendChild(card);
+        });
+      }
+
+      /* ---- Utilities ---- */
+      function countByStatus(status) {
+        return submissions.filter(function (s) { return s.status === status; }).length;
+      }
+
+      function countByField(field) {
+        var counts = {};
+        submissions.forEach(function (s) {
+          var key = s[field];
+          counts[key] = (counts[key] || 0) + 1;
+        });
+        return counts;
+      }
+
+      function unique(arr) {
+        var seen = {};
+        return arr.filter(function (v) {
+          if (seen[v]) return false;
+          seen[v] = true;
+          return true;
+        });
+      }
+
+      function formatLabel(str) {
+        return str.replace(/-/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+      }
+
+      function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+    })();
+  </script>
+
+</body>
+</html>
